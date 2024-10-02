@@ -9,6 +9,11 @@ int DC_PIN  = 5;
 int DIN_PIN = 6;
 int CLK_PIN = 7;
 
+int LED_CANAL_1 = 8;
+int LED_CANAL_2 = 9;
+int LED_CANAL_3 = 10;
+int LED_CANAL_4 = 11;
+
 
 // Crear un objeto para la pantalla
 Adafruit_PCD8544 display = Adafruit_PCD8544(CLK_PIN, DIN_PIN, DC_PIN, CE_PIN, RST_PIN);
@@ -47,19 +52,23 @@ void setup() {
   // Texto
   display.setTextSize(1);
   display.setTextColor(BLACK);
+
+  // Configurar pines de los leds
+  pinMode(LED_CANAL_1, OUTPUT);
+  pinMode(LED_CANAL_2, OUTPUT);
+  pinMode(LED_CANAL_3, OUTPUT);
+  pinMode(LED_CANAL_4, OUTPUT);
   
 }
 
-void loop() {
+
+void mostrar_voltajes(){
 
   // Leer los voltajes de los 4 canales
   float voltage1 = readVoltage(channel1Pin);
   float voltage2 = readVoltage(channel2Pin);
   float voltage3 = readVoltage(channel3Pin);
   float voltage4 = readVoltage(channel4Pin);
-  
-  // Limpiar la pantalla para actualizar los valores
-  display.clearDisplay();
   
   // Mostrar los valores de voltaje en la pantalla
   display.setCursor(0, 0);
@@ -77,9 +86,47 @@ void loop() {
   display.setCursor(0, 30);
   display.print("V4: ");
   display.print(voltage4, 2);
+
+  // Condición para encender el LED
+  if (voltage1 < -20 || voltage1 > 20) {
+    digitalWrite(LED_CANAL_1, HIGH);  // Encender LED
+  } else {
+    digitalWrite(LED_CANAL_1, LOW);   // Apagar LED
+  }
+
+  // Condición para encender el LED
+  if (voltage2 < -20 || voltage2 > 20) {
+    digitalWrite(LED_CANAL_2, HIGH); 
+  } else {
+    digitalWrite(LED_CANAL_2, LOW);   
+  }
+
+  // Condición para encender el LED
+  if (voltage3 < -20 || voltage3 > 20) {
+    digitalWrite(LED_CANAL_3, HIGH);  
+  } else {
+    digitalWrite(LED_CANAL_3, LOW);   
+  }
+
+  // Condición para encender el LED
+  if (voltage4 < -20 || voltage4 > 20) {
+    digitalWrite(LED_CANAL_4, HIGH);  
+  } else {
+    digitalWrite(LED_CANAL_4, LOW);   
+  }
+
+
+}
+
+void loop() {
+  
+  // Limpiar la pantalla para actualizar los valores
+  display.clearDisplay();
+  
+  mostrar_voltajes();
   
   display.display(); // Actualizar la pantalla
   
-  delay(100); // Actualizar 
+  delay(50); // Actualizar 
 
 }

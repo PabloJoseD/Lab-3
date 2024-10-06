@@ -50,7 +50,7 @@ float readVoltage(int pin) {
       // Convertir el valor analógico (0 a 1023) al voltaje de entrada original (-24V a 24V)
       // Relación: 0 a 1023 -> 0V a 5V (en el Arduino)
       voltage = analogValue * (5.0 / 1023.0);
-      // Convertir el rango 0-5V al rango -24V a 24V 
+      // Convertir el rango 0-5V al rango -34V a 34V 
       convertedVoltage = (-48/4.79) * voltage + 25.00;
       // Sumatoria de las tensiones al cuadrado
       sumVoltageSquared += convertedVoltage * convertedVoltage; 
@@ -60,8 +60,6 @@ float readVoltage(int pin) {
 
     // Con 200 muestras se calcula el rms
     rmsVoltage = sqrt(sumVoltageSquared / samples);
-    Serial.print("Tensión RMS: ");
-    Serial.println(rmsVoltage);
     
     return rmsVoltage;
 
@@ -131,34 +129,63 @@ void mostrar_voltajes(){
   display.print("V4: ");
   display.print(voltage4, 2);
 
-  // Condición para encender el LED
-  if (voltage1 < -20 || voltage1 > 20) {
-    digitalWrite(LED_CANAL_1, HIGH);  // Encender LED
-  } else {
-    digitalWrite(LED_CANAL_1, LOW);   // Apagar LED
-  }
+  if (voltageACModeDetector()){
+    // Condición para encender el LED
+    if (voltage1 > 14.2) {
+      digitalWrite(LED_CANAL_1, HIGH);  // Encender LED
+    } else {
+      digitalWrite(LED_CANAL_1, LOW);   // Apagar LED
+    }
 
-  // Condición para encender el LED
-  if (voltage2 < -20 || voltage2 > 20) {
-    digitalWrite(LED_CANAL_2, HIGH); 
-  } else {
-    digitalWrite(LED_CANAL_2, LOW);   
-  }
+    // Condición para encender el LED
+    if (voltage2 > 14.2) {
+      digitalWrite(LED_CANAL_2, HIGH); 
+    } else {
+      digitalWrite(LED_CANAL_2, LOW);   
+    }
 
-  // Condición para encender el LED
-  if (voltage3 < -20 || voltage3 > 20) {
-    digitalWrite(LED_CANAL_3, HIGH);  
-  } else {
-    digitalWrite(LED_CANAL_3, LOW);   
-  }
+    // Condición para encender el LED
+    if (voltage3 > 14.2) {
+      digitalWrite(LED_CANAL_3, HIGH);  
+    } else {
+      digitalWrite(LED_CANAL_3, LOW);   
+    }
 
-  // Condición para encender el LED
-  if (voltage4 < -20 || voltage4 > 20) {
-    digitalWrite(LED_CANAL_4, HIGH);  
-  } else {
-    digitalWrite(LED_CANAL_4, LOW);   
-  }
+    // Condición para encender el LED
+    if (voltage4 > 14.2) {
+      digitalWrite(LED_CANAL_4, HIGH);  
+    } else {
+      digitalWrite(LED_CANAL_4, LOW);   
+    }
 
+  } else {
+    if (voltage1 > 14.2) {
+      digitalWrite(LED_CANAL_1, HIGH);  // Encender LED
+    } else {
+      digitalWrite(LED_CANAL_1, LOW);   // Apagar LED
+    }
+
+    // Condición para encender el LED
+    if (voltage2 < -20 || voltage2 > 20) {
+      digitalWrite(LED_CANAL_2, HIGH); 
+    } else {
+      digitalWrite(LED_CANAL_2, LOW);   
+    }
+
+    // Condición para encender el LED
+    if (voltage3 < -20 || voltage3 > 20) {
+      digitalWrite(LED_CANAL_3, HIGH);  
+    } else {
+      digitalWrite(LED_CANAL_3, LOW);   
+    }
+
+    // Condición para encender el LED
+    if (voltage4 < -20 || voltage4 > 20) {
+      digitalWrite(LED_CANAL_4, HIGH);  
+    } else {
+      digitalWrite(LED_CANAL_4, LOW);   
+    }
+  }
 
 }
 

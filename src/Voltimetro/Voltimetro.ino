@@ -25,18 +25,59 @@ const int channel2Pin = A4;
 const int channel3Pin = A3;
 const int channel4Pin = A2;
 
+// Pin para seleccionar modo de lectura
+const int voltageModePin = A1;
+
+bool voltageACModeDetector() {
+  // Leer el pin
+  int voltageMode = analogRead(voltageModePin);
+  // Si la lectura es mayor que la mitad del rango la lectura es AC, caso contrario es DC
+  bool voltageIsAC = voltageMode > 512;
+  return voltageIsAC;
+}
 
 float readVoltage(int pin) {
-  int analogValue = analogRead(pin);  // Leer el valor analógico (0 a 1023)
+  // variables necesaria
+  float voltage, convertedVoltage, rmsVoltage;
+  int analogValue;
   
-  // Convertir el valor analógico (0 a 1023) al voltaje de entrada original (-24V a 24V)
-  // Relación: 0 a 1023 -> 0V a 5V (en el Arduino)
-  float voltage = analogValue * (5.0 / 1023.0); // Convertir la lectura analógica a voltaje (0-5V)
+  if (voltageACModeDetector()) {
+    int samples = 200;
+    float sumVoltageSquared;
+    
+    for (int i=0; i<samples; i++){
+      analogValue = analogRead(pin); // Leer el valor analógico (0 a 1023)
+      // Convertir el valor analógico (0 a 1023) al voltaje de entrada original (-24V a 24V)
+      // Relación: 0 a 1023 -> 0V a 5V (en el Arduino)
+      voltage = analogValue * (5.0 / 1023.0);
+      // Convertir el rango 0-5V al rango -24V a 24V 
+      convertedVoltage = (-48/4.79) * voltage + 25.00;
+      // Sumatoria de las tensiones al cuadrado
+      sumVoltageSquared += convertedVoltage * convertedVoltage; 
+      // Frecuencia de muestreo
+      delayMicroseconds(83);
+    }
 
-  // Convertir el rango 0-5V al rango -24V a 24V 
-   float convertedVoltage = (-48/4.79) * voltage + 25.00;
+    // Con 200 muestras se calcula el rms
+    rmsVoltage = sqrt(sumVoltageSquared / samples);
+    Serial.print("Tensión RMS: ");
+    Serial.println(rmsVoltage);
+    
+    return rmsVoltage;
 
-  return convertedVoltage;
+  } else {
+
+    analogValue = analogRead(pin);  // Leer el valor analógico (0 a 1023)
+    
+    // Convertir el valor analógico (0 a 1023) al voltaje de entrada original (-24V a 24V)
+    // Relación: 0 a 1023 -> 0V a 5V (en el Arduino)
+    voltage = analogValue * (5.0 / 1023.0); // Convertir la lectura analógica a voltaje (0-5V)
+
+    // Convertir el rango 0-5V al rango -24V a 24V 
+    convertedVoltage = (-48/4.79) * voltage + 25.00;
+
+    return convertedVoltage;
+  }
 }
 
 void setup() {
@@ -58,6 +99,9 @@ void setup() {
   pinMode(LED_CANAL_2, OUTPUT);
   pinMode(LED_CANAL_3, OUTPUT);
   pinMode(LED_CANAL_4, OUTPUT);
+
+  // Serisl monitor
+  Serial.begin(9600);
   
 }
 

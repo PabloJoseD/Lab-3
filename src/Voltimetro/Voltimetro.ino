@@ -99,7 +99,7 @@ void setup() {
   pinMode(LED_CANAL_4, OUTPUT);
 
   // Serial monitor
-  //Serial.begin(9600);
+  Serial.begin(9600);
   
 }
 
@@ -112,23 +112,37 @@ void mostrar_voltajes(){
   float voltage3 = readVoltage(channel3Pin);
   float voltage4 = readVoltage(channel4Pin);
 
+  // Mostrar los valores de voltaje en la pantalla
+  display.setCursor(0, 0);
+  display.print("V1: ");
+  display.print(voltage1, 2);  // Mostrar con 2 decimales
+
+  display.setCursor(0, 10);
+  display.print("V2: ");
+  display.print(voltage2, 2);
+
+  display.setCursor(0, 20);
+  display.print("V3: ");
+  display.print(voltage3, 2);
+
+  display.setCursor(0, 30);
+  display.print("V4: ");
+  display.print(voltage4, 2);
+
   if (voltageACModeDetector()){
     // Condición para encender el LED
-    // Serial.print("Tension RMS canal 1: ");
-    // Serial.print(voltage1);
-    // Serial.println("V");
+   
+    
+    Serial.print("AC, ");
+    Serial.print(voltage1);
+    Serial.print(", ");
+    Serial.print(voltage2);
+    Serial.print(", ");
+    Serial.print(voltage3);
+    Serial.print(", ");  
+    Serial.print(voltage4);
+    Serial.println();
 
-    // Serial.print("Tension RMS canal 2: ");
-    // Serial.print(voltage2);
-    // Serial.println("V");
-
-    // Serial.print("Tension RMS canal 3: ");
-    // Serial.print(voltage3);
-    // Serial.println("V");
-
-    // Serial.print("Tension RMS canal 4: ");
-    // Serial.print(voltage4);
-    // Serial.println("V");
 
     if (voltage1 > 14.2) {
       digitalWrite(LED_CANAL_1, HIGH);  // Encender LED
@@ -158,21 +172,18 @@ void mostrar_voltajes(){
     }
 
   } else {
-    // Serial.print("Tension DC canal 1: ");
-    // Serial.print(voltage1);
-    // Serial.println("V");
 
-    // Serial.print("Tension DC canal 2: ");
-    // Serial.print(voltage2);
-    // Serial.println("V");
-
-    // Serial.print("Tension DC canal 3: ");
-    // Serial.print(voltage3);
-    // Serial.println("V");
-
-    // Serial.print("Tension DC canal 4: ");
-    // Serial.print(voltage4);
-    // Serial.println("V");
+   
+    Serial.print("DC, ");
+    Serial.print(voltage1);
+    Serial.print(", ");
+    Serial.print(voltage2);
+    Serial.print(", ");
+    Serial.print(voltage3);
+    Serial.print(", ");  
+    Serial.print(voltage4);
+     Serial.println();
+    
 
     if (voltage1 > 14.2) {
       digitalWrite(LED_CANAL_1, HIGH);  // Encender LED

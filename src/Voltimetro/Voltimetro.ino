@@ -112,25 +112,31 @@ void mostrar_voltajes(){
   float voltage3 = readVoltage(channel3Pin);
   float voltage4 = readVoltage(channel4Pin);
 
-  // Mostrar los valores de voltaje en la pantalla
-  display.setCursor(0, 0);
-  display.print("V1: ");
-  display.print(voltage1, 2);  // Mostrar con 2 decimales
-
-  display.setCursor(0, 10);
-  display.print("V2: ");
-  display.print(voltage2, 2);
-
-  display.setCursor(0, 20);
-  display.print("V3: ");
-  display.print(voltage3, 2);
-
-  display.setCursor(0, 30);
-  display.print("V4: ");
-  display.print(voltage4, 2);
+  
 
   if (voltageACModeDetector()){
-    // Condición para encender el LED
+    
+
+    // Mostrar los valores de voltaje en la pantalla
+
+    display.setCursor(0, 0);
+    display.print("MODO AC (Vrms)");
+
+    display.setCursor(0, 10);
+    display.print("V1: ");
+    display.print(voltage1, 2);  // Mostrar con 2 decimales
+
+    display.setCursor(0, 20);
+    display.print("V2: ");
+    display.print(voltage2, 2);
+
+    display.setCursor(0, 30);
+    display.print("V3: ");
+    display.print(voltage3, 2);
+
+    display.setCursor(0, 40);
+    display.print("V4: ");
+    display.print(voltage4, 2);
    
     
     Serial.print("AC, ");
@@ -172,6 +178,25 @@ void mostrar_voltajes(){
     }
 
   } else {
+
+    display.setCursor(0, 0);
+    display.print("MODO DC (V)");
+
+    display.setCursor(0, 10);
+    display.print("V1: ");
+    display.print(voltage1, 2);  // Mostrar con 2 decimales
+
+    display.setCursor(0, 20);
+    display.print("V2: ");
+    display.print(voltage2, 2);
+
+    display.setCursor(0, 30);
+    display.print("V3: ");
+    display.print(voltage3, 2);
+
+    display.setCursor(0, 40);
+    display.print("V4: ");
+    display.print(voltage4, 2);
 
    
     Serial.print("DC, ");

@@ -14,6 +14,8 @@ int LED_CANAL_2 = 9;
 int LED_CANAL_3 = 10;
 int LED_CANAL_4 = 11;
 
+int comunicacion_serial = 2;
+
 
 // Crear un objeto para la pantalla
 Adafruit_PCD8544 display = Adafruit_PCD8544(CLK_PIN, DIN_PIN, DC_PIN, CE_PIN, RST_PIN);
@@ -97,6 +99,7 @@ void setup() {
   pinMode(LED_CANAL_2, OUTPUT);
   pinMode(LED_CANAL_3, OUTPUT);
   pinMode(LED_CANAL_4, OUTPUT);
+  pinMode(comunicacion_serial, INPUT);
 
   // Serial monitor
   Serial.begin(9600);
@@ -105,6 +108,8 @@ void setup() {
 
 
 void mostrar_voltajes(){
+
+  int switch_state = digitalRead(comunicacion_serial);
 
   // Leer los voltajes de los 4 canales
   float voltage1 = readVoltage(channel1Pin);
@@ -138,16 +143,17 @@ void mostrar_voltajes(){
     display.print("V4: ");
     display.print(voltage4, 2);
    
-    
-    Serial.print("AC, ");
-    Serial.print(voltage1);
-    Serial.print(", ");
-    Serial.print(voltage2);
-    Serial.print(", ");
-    Serial.print(voltage3);
-    Serial.print(", ");  
-    Serial.print(voltage4);
-    Serial.println();
+    if (switch_state == HIGH){
+      Serial.print("AC, ");
+      Serial.print(voltage1);
+      Serial.print(", ");
+      Serial.print(voltage2);
+      Serial.print(", ");
+      Serial.print(voltage3);
+      Serial.print(", ");  
+      Serial.print(voltage4);
+      Serial.println();
+    }
 
 
     if (voltage1 > 14.2) {
@@ -198,16 +204,17 @@ void mostrar_voltajes(){
     display.print("V4: ");
     display.print(voltage4, 2);
 
-   
-    Serial.print("DC, ");
-    Serial.print(voltage1);
-    Serial.print(", ");
-    Serial.print(voltage2);
-    Serial.print(", ");
-    Serial.print(voltage3);
-    Serial.print(", ");  
-    Serial.print(voltage4);
-     Serial.println();
+    if (switch_state == HIGH){
+      Serial.print("DC, ");
+      Serial.print(voltage1);
+      Serial.print(", ");
+      Serial.print(voltage2);
+      Serial.print(", ");
+      Serial.print(voltage3);
+      Serial.print(", ");  
+      Serial.print(voltage4);
+      Serial.println();
+    }
     
 
     if (voltage1 > 14.2) {
